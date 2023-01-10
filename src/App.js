@@ -1,24 +1,21 @@
-import logo from './logo.svg';
+import React from 'react';
+import { Routes, Route } from 'react-router-dom';
 import './App.css';
+import { StreamList } from './pages/StreamLists';
+import { Stream } from './pages/Stream';
+// import { StreamBroadcast } from './pages/StreamBroadcast';
 
 function App() {
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Routes>
+        <Route path="/" element={<StreamList />} />
+        {/* <Route path="/stream-broadcast/:key" element={<StreamBroadcast />} /> */}
+        <Route path="/streams/:id" element={<Stream />} />
+      </Routes>
     </div>
+
   );
 }
 

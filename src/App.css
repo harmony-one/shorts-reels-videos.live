@@ -14,8 +14,10 @@
 }
 
 .App-header {
+  padding: 40px 0 40px 0;
   background-color: #282c34;
   min-height: 100vh;
+  height: auto;
   display: flex;
   flex-direction: column;
   align-items: center;
