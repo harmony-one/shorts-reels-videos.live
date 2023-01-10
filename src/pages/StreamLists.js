@@ -4,21 +4,25 @@ import { useNavigate } from 'react-router-dom';
 
 export const StreamList = () => {
     const [streamsList, setStreamsList] = useState([]);
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const create = useCallback(() => {
+        setLoading(true);
+
         createLiveStream({}).then(res => {
             localStorage.setItem(res.data.id, res.data.stream_key);
 
             console.log(res.data)
+            setLoading(false);
 
             navigate(`/streams/${res.data.id}`);
-        });
+        }).finally(() => setLoading(false));
     }, []);
 
-    // const remove = useCallback((liveStreamId) => {
-    //     deleteLiveStream({ liveStreamId }).then(res => console.log(res.data));
-    // }, []);
+    const remove = useCallback((liveStreamId) => {
+        deleteLiveStream({ liveStreamId }).then(res => console.log(res.data));
+    }, []);
 
     useEffect(() => {
         retrieveLiveStreams({}).then(res => setStreamsList(res.data));
@@ -29,7 +33,7 @@ export const StreamList = () => {
     return (
         <div className="App-header">
             <div
-                onClick={() => create()}
+                onClick={() => !loading && create()}
                 style={{
                     cursor: 'pointer',
                     border: '1px solid white',
@@ -37,7 +41,7 @@ export const StreamList = () => {
                     padding: '10px 20px'
                 }}
             >
-                Create New Live Stream
+                {loading ? 'Creating...' : 'Create New Live Stream'}
             </div>
 
             <h2>
@@ -66,7 +70,7 @@ export const StreamList = () => {
                                     justifyContent: 'space-between'
                                 }}
                                 onClick={() => navigate(`/streams/${stream.id}`)}
-                            // onClick={() => remove(stream.id)}
+                                // onClick={() => remove(stream.id)}
                             >
                                 {`Created ${new Date(stream.created_at * 1000).toLocaleString("en-US")}`}
                                 <span style={{ marginLeft: 30 }}>
