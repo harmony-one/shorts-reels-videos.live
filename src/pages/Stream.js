@@ -97,7 +97,7 @@ export const Stream = () => {
                         __html: `<mux-player stream-type="live" playback-id="${stream.playback_ids[0]?.id}" metadata-video-title="Placeholder (optional)" metadata-viewer-user-id="Placeholder (optional)" primary-color="#FFFFFF" secondary-color="#000000"></mux-player>`
                     }}>
                     </div>
-                </div> : 'Stream not found'
+                </div> : 'Loading...'
             }
         </div>
     );
