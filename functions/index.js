@@ -95,6 +95,7 @@ exports.createSpaceWithBroadcast = functions.https.onCall(async (data, context) 
 
     const liveStream = await Video.LiveStreams.create({
       playback_policy: "public",
+      latency_mode: 'low',
       new_asset_settings: { playback_policy: "public" },
     });
 
@@ -161,7 +162,7 @@ exports.stopBroadcast = functions.https.onCall(async (data, context) => {
 
 exports.deleteSpace = functions.https.onCall(async (data, context) => {
   try {
-    const response = await Video.Spaces.delete({ spaceId: data.spaceId });
+    const response = await Video.Spaces.delete(data.spaceId);
 
     return response;
   } catch (err) {

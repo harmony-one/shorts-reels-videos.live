@@ -1,14 +1,42 @@
-import { useEffect, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { retrieveLiveStreams } from '../utils';
+import { retrieveLiveStreams, deleteLiveStream, deleteSpace } from '../utils';
 
 export const StreamList = () => {
     const [streamsList, setStreamsList] = useState([]);
+    const [deleting, setDeleting] = useState(false);
 
     const navigate = useNavigate();
 
+    const loadStreams = useCallback(async () => {
+        return await retrieveLiveStreams({}).then(res => setStreamsList(res.data));
+    });
+
+    const removeStream = useCallback(async (liveStreamId) => {
+        setDeleting(liveStreamId);
+
+        try {
+
+            const streamsStr = localStorage.getItem('streams');
+
+            const streamCreds = streamsStr && JSON.parse(streamsStr)[liveStreamId];
+
+            await deleteLiveStream({ liveStreamId });
+
+            if (streamCreds) {
+                await deleteSpace({ spaceId: streamCreds.spaceId });
+            }
+        } catch (e) {
+            console.error(e);
+        }
+
+        await loadStreams();
+
+        setDeleting(null);
+    })
+
     useEffect(() => {
-        retrieveLiveStreams({}).then(res => setStreamsList(res.data));
+        loadStreams();
     }, []);
 
     return (
@@ -28,20 +56,36 @@ export const StreamList = () => {
                         <div
                             key={stream.id}
                             style={{
-                                cursor: 'pointer',
-                                border: '1px solid white',
-                                borderRadius: 5,
-                                padding: '10px 20px',
                                 margin: '20px 0px',
                                 display: 'flex',
                                 flexDirection: 'row',
-                                justifyContent: 'space-between'
-                            }}
-                            onClick={() => navigate(`/streams/${stream.id}`)}
-                        >
-                            {`Created ${new Date(stream.created_at * 1000).toLocaleString("en-US")}`}
-                            <span style={{ marginLeft: 30 }}>
-                                {"Watch ->"}
+                                justifyContent: 'space-around',
+                                alignItems: 'center'
+                            }}>
+                            <div
+                                style={{
+                                    cursor: 'pointer',
+                                    border: '1px solid white',
+                                    borderRadius: 5,
+                                    padding: '10px 20px',
+                                    display: 'flex',
+                                    flexDirection: 'row',
+                                    justifyContent: 'space-between'
+                                }}
+                                onClick={() => navigate(`/streams/${stream.id}`)}
+                            >
+                                {`Created ${new Date(stream.created_at * 1000).toLocaleString("en-US")}`}
+                                <span style={{ marginLeft: 30 }}>
+                                    {"Watch ->"}
+                                </span>
+                            </div>
+                            <span
+                                onClick={() => removeStream(stream.id)}
+                                style={{
+                                    cursor: 'pointer'
+                                }}
+                            >
+                                {deleting === stream.id ? "Deleting..." : "Delete"}
                             </span>
                         </div>
                     )
