@@ -3,17 +3,18 @@ import { Routes, Route } from 'react-router-dom';
 import './App.css';
 import { StreamList } from './pages/StreamLists';
 import { Stream } from './pages/Stream';
-// import { StreamBroadcast } from './pages/StreamBroadcast';
+import { Header } from './Header';
 
 function App() {
-
   return (
     <div className="App">
-      <Routes>
-        <Route path="/" element={<StreamList />} />
-        {/* <Route path="/stream-broadcast/:key" element={<StreamBroadcast />} /> */}
-        <Route path="/streams/:id" element={<Stream />} />
-      </Routes>
+      <Header />
+      <div className="App-body">
+        <Routes>
+          <Route path="/" element={<StreamList />} />
+          <Route path="/streams/:id" element={<Stream />} />
+        </Routes>
+      </div>
     </div>
 
   );

@@ -34,7 +34,30 @@
   from {
     transform: rotate(0deg);
   }
+
   to {
     transform: rotate(360deg);
   }
+}
+
+.App-body {
+  padding: 40px 0 40px 0;
+  background-color: #282c34;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  font-size: calc(10px + 2vmin);
+  color: white;
+  min-height: 100vh;
+}
+
+.App-button {
+  cursor: pointer;
+  border: 1px solid white;
+  border-radius: 5px;
+  padding: 10px 20px;
+  color: white;
+  margin: 30px;
+  font-size: 22px;
 }
