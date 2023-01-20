@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { retrieveLiveStreams, deleteLiveStream, deleteSpace } from '../utils';
+import { deleteLiveStream, getLiveStreams } from '../utils';
 
 export const StreamList = () => {
     const [streamsList, setStreamsList] = useState([]);
@@ -9,23 +9,14 @@ export const StreamList = () => {
     const navigate = useNavigate();
 
     const loadStreams = useCallback(async () => {
-        return await retrieveLiveStreams({}).then(res => setStreamsList(res.data));
+        return await getLiveStreams().then(res => setStreamsList(res.data));
     });
 
     const removeStream = useCallback(async (liveStreamId) => {
         setDeleting(liveStreamId);
 
         try {
-
-            const streamsStr = localStorage.getItem('streams');
-
-            const streamCreds = streamsStr && JSON.parse(streamsStr)[liveStreamId];
-
-            await deleteLiveStream({ liveStreamId });
-
-            if (streamCreds) {
-                await deleteSpace({ spaceId: streamCreds.spaceId });
-            }
+            await deleteLiveStream(liveStreamId);
         } catch (e) {
             console.error(e);
         }
@@ -36,7 +27,13 @@ export const StreamList = () => {
     })
 
     useEffect(() => {
+        const intervalId = setInterval(() => {
+            loadStreams();
+        }, 5000)
+
         loadStreams();
+
+        return () => clearInterval(intervalId)
     }, []);
 
     return (
@@ -70,14 +67,37 @@ export const StreamList = () => {
                                     padding: '10px 20px',
                                     display: 'flex',
                                     flexDirection: 'row',
-                                    justifyContent: 'space-between'
+                                    justifyContent: 'space-between',
+                                    alignItems: 'space-between',
+                                    minWidth: 600
                                 }}
-                                onClick={() => navigate(`/streams/${stream.id}`)}
                             >
-                                {`Created ${new Date(stream.created_at * 1000).toLocaleString("en-US")}`}
-                                <span style={{ marginLeft: 30 }}>
-                                    {"Watch ->"}
-                                </span>
+                                <div style={{
+                                    flexDirection: "column",
+                                    display: 'flex',
+                                    alignItems: 'space-around',
+                                    justifyContent: 'space-around'
+                                }}>
+                                    <div style={{ color: '#38b3ff', textAlign: 'start' }}>
+                                        {stream.title}
+                                    </div>
+                                    <div style={{ fontSize: 17, textAlign: 'start' }}>
+                                        {`Status ${stream.status === "active" ? 'active' : 'waiting'}`}
+                                    </div>
+                                    <div style={{ fontSize: 17, textAlign: 'start' }}>
+                                        {`Created ${new Date(stream.createdAt).toLocaleString("en-US")}`}
+                                    </div>
+                                </div>
+
+                                <div
+                                    className="App-button"
+                                    onClick={() => stream.status === "active" && navigate(`/streams/${stream.id}`)}
+                                    style={{
+                                        opacity: stream.status === "active" ? 1 : 0.3,
+                                    }}
+                                >
+                                    {"Stream"}
+                                </div>
                             </div>
                             <span
                                 onClick={() => removeStream(stream.id)}
@@ -90,7 +110,7 @@ export const StreamList = () => {
                         </div>
                     )
                 })}
-            </div> : "Loading..."}
+            </div> : "..."}
         </>
     );
 }

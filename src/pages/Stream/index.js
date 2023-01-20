@@ -1,26 +1,43 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { StreamRecord } from './StreamRecord';
 import { StreamView } from './StreamView';
+import { getLiveStream } from '../../utils';
 
 export const Stream = () => {
     const [initilized, setInitilized] = useState();
-    const [ownerCreds, setOwnerCreds] = useState();
+    const [address, setAddress] = useState('');
+    const [stream, setStream] = useState();
+
+    const navigate = useNavigate();
 
     const { id } = useParams();
 
     useEffect(() => {
-        const keyStr = localStorage.getItem('streams');
+        const intervalId = setInterval(() => {
+            getLiveStream(id).then(res => setStream(res.data));
+        }, 4000);
 
-        if (keyStr) {
-            setOwnerCreds(JSON.parse(keyStr)[id]);
-        }
+        getLiveStream(id).then(res => setStream(res.data));
 
-        setInitilized(true);
+        return () => clearInterval(intervalId);
     }, [id])
 
-    return initilized ?
-        ownerCreds ?
-            <StreamRecord ownerCreds={ownerCreds} /> : <StreamView />
-        : 'Loading...'
+    useEffect(() => {
+        const profileStr = localStorage.getItem('live_profile');
+
+        const profile = profileStr && JSON.parse(profileStr);
+
+        setAddress(profile?.address);
+
+        setInitilized(true);
+    }, []);
+
+    return <>
+        {stream && initilized ?
+            address && address === stream.ownerAddress ?
+                <StreamRecord stream={stream} /> : <StreamView stream={stream} />
+            : '...'
+        }
+    </>
 }

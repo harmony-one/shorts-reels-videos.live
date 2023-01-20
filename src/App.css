@@ -61,3 +61,22 @@
   margin: 30px;
   font-size: 22px;
 }
+
+.App-address {
+  padding: 10px 20px;
+  color: white;
+  margin: 30px 10px;
+  font-size: 18px;
+}
+
+input {
+  outline: none;
+  width: auto;
+  border: 0;
+  float: left;
+  padding: 8px 20px;
+  background: white;
+  width: 400px;
+  height: 40px;
+  font-size: 20px;
+}
