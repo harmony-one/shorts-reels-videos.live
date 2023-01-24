@@ -45,7 +45,11 @@ export function CreateStream(props) {
         }}>
             Creation failed: {error}
 
-            <div onClick={() => setError('')} className="App-button">
+            <div
+                onClick={() => setError('')}
+                className="App-button"
+                style={{ marginTop: 30 }}
+            >
                 Try again
             </div>
         </div>
