@@ -9,6 +9,9 @@ export const StreamView = ({ stream }) => {
                 <span style={{ color: '#38b3ff' }}>{stream.title}</span>
             </h3>
             <h3>Waiting for the stream to start...</h3>
+            <div onClick={() => navigate('/')} className="App-button">
+                Back to the list
+            </div>
         </>)
     }
 

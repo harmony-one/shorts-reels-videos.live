@@ -1,6 +1,7 @@
 import React from 'react';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { RecIcon } from '../../icons/RecIcon';
 import { createLiveStream } from '../../utils/api';
 
 export function CreateStream(props) {
@@ -17,6 +18,10 @@ export function CreateStream(props) {
 
             if (window.ethereum) {
                 accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+            }
+
+            if (!accounts[0]) {
+                throw new Error('Metamask not authorised');
             }
 
             const res = await createLiveStream({ title, ownerAddress: accounts[0] });
@@ -69,7 +74,12 @@ export function CreateStream(props) {
                 </input>
             </div>
 
-            <div onClick={() => create()} className="App-button">
+            <div
+                onClick={() => create()}
+                className="App-button"
+                style={{ marginTop: 30 }}
+            >
+                <RecIcon style={{ marginRight: 10, display: loading ? 'none' : 'block' }} />
                 {!loading ? "Go Live" : '...'}
             </div>
         </div>
