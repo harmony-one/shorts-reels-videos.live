@@ -6,7 +6,11 @@ import { createLiveStream } from '../../utils/api';
 
 export function CreateStream(props) {
     const [loading, setLoading] = useState(false);
+
     const [title, setTitle] = useState('');
+    const [name, setName] = useState('');
+    const [aliasName, setAliasName] = useState('');
+
     const [error, setError] = useState('');
     const navigator = useNavigate();
 
@@ -24,7 +28,12 @@ export function CreateStream(props) {
                 throw new Error('Metamask not authorised');
             }
 
-            const res = await createLiveStream({ title, ownerAddress: accounts[0] });
+            const res = await createLiveStream({
+                title,
+                name,
+                aliasName,
+                ownerAddress: accounts[0]
+            });
 
             navigator(`/streams/${res.data.id}`);
         } catch (err) {
@@ -32,7 +41,7 @@ export function CreateStream(props) {
         }
 
         setLoading(false);
-    }, [title]);
+    }, [title, name, aliasName]);
 
     if (error) {
         return <div style={{
@@ -61,13 +70,53 @@ export function CreateStream(props) {
             justifyContent: 'center',
             alignItems: 'center',
             flexDirection: 'column',
-            marginTop: 150
+            marginTop: 100
         }}>
             <h3>
-                stream name:
+                stream address:
             </h3>
 
-            <div>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center'
+            }}>
+                <div style={{
+                    display: 'flex',
+                    flexDirection: 'row',
+                    alignItems: 'flex-start',
+                    justifyContent: 'center',
+                    marginBottom: 30
+                }}>
+                    <div>
+                        {"https://"}
+                    </div>
+                    <div>
+                        <input
+                            className='small-input'
+                            disabled={loading}
+                            value={name}
+                            onChange={event => setName(event.target.value)}
+                        />
+                    </div>
+                    <div>
+                        {".1.country/"}
+                    </div>
+                    <div>
+                        <input
+                            className='small-input'
+                            disabled={loading}
+                            value={aliasName}
+                            onChange={event => setAliasName(event.target.value)}
+                        />
+                    </div>
+                </div>
+
+                <h3>
+                    stream name:
+                </h3>
+
                 <input
                     disabled={loading}
                     value={title}
@@ -81,7 +130,7 @@ export function CreateStream(props) {
             <div
                 onClick={() => create()}
                 className="App-button"
-                style={{ marginTop: 30 }}
+                style={{ marginTop: 50 }}
             >
                 <RecIcon style={{ marginRight: 10, display: loading ? 'none' : 'block' }} />
                 {!loading ? "Go Live" : '...'}

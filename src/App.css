@@ -80,6 +80,19 @@ input {
   padding: 8px 20px;
   background: white;
   width: 400px;
-  height: 40px;
+  height: 20px;
+  font-size: 20px;
+}
+
+input.small-input {
+  outline: none;
+  width: auto;
+  border: 0;
+  float: left;
+  padding: 8px 5px;
+  margin: 0px 4px;
+  background: white;
+  width: 120px;
+  height: 20px;
   font-size: 20px;
 }

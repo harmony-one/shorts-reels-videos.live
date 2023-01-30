@@ -15,23 +15,66 @@ export const Stream = () => {
 
     useEffect(() => {
         const intervalId = setInterval(() => {
-            getLiveStream(id).then(res => setStream(res.data));
+            getLiveStream(id, address).then(res => setStream(res.data));
         }, 4000);
 
-        getLiveStream(id).then(res => setStream(res.data));
+        if (address) {
+            getLiveStream(id, address).then(res => setStream(res.data));
+        }
 
         return () => clearInterval(intervalId);
-    }, [id])
+    }, [id, address])
+
+    const handleAccountsChanged = (accounts) => {
+        if (accounts.length) {
+            localStorage.setItem('live_profile',
+                JSON.stringify({
+                    address: accounts[0]
+                })
+            )
+
+            setAddress(accounts[0])
+        } else {
+            removeAccounts()
+        }
+    }
+
+    const removeAccounts = (accounts) => {
+        localStorage.removeItem('live_profile')
+        setAddress()
+    }
 
     useEffect(() => {
         const profileStr = localStorage.getItem('live_profile');
 
         const profile = profileStr && JSON.parse(profileStr);
 
-        setAddress(profile?.address);
+        if (profile?.address) {
+            connectMetamask();
+        }
 
         setInitilized(true);
+
+        window.ethereum?.on('accountsChanged', handleAccountsChanged);
     }, []);
+
+    const connectMetamask = () => {
+        if (window.ethereum) {
+            window.ethereum.request({ method: 'eth_requestAccounts' })
+                .then(handleAccountsChanged)
+                .catch(removeAccounts)
+        } else {
+            removeAccounts()
+        }
+    }
+
+    if (!address) {
+        return <div style={{
+            marginTop: 100
+        }}>
+            <h3>To join <span style={{ color: '#38b3ff' }}>{stream?.title}</span> stream, you must sign in to the metamask</h3>
+        </div>
+    }
 
     return <>
         {stream && initilized ?
