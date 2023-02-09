@@ -30,3 +30,7 @@ export const deleteLiveStream = async (id) => {
 export const startLiveStream = async (id) => {
     return axios.post(`${backendUrl}/streams/${id}/start`);
 };
+
+export const likeLiveStream = async (id, address) => {
+    return axios.post(`${backendUrl}/streams/${id}/like?address=${address}`);
+};

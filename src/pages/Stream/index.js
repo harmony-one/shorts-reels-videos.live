@@ -18,9 +18,9 @@ export const Stream = () => {
             getLiveStream(id, address).then(res => setStream(res.data));
         }, 4000);
 
-        if (address) {
+        // if (address) {
             getLiveStream(id, address).then(res => setStream(res.data));
-        }
+        //}
 
         return () => clearInterval(intervalId);
     }, [id, address])
@@ -68,18 +68,19 @@ export const Stream = () => {
         }
     }
 
-    if (!address) {
-        return <div style={{
-            marginTop: 100
-        }}>
-            <h3>To join <span style={{ color: '#38b3ff' }}>{stream?.title}</span> stream, you must sign in to the metamask</h3>
-        </div>
-    }
+    // if (!address) {
+    //     return <div style={{
+    //         marginTop: 100
+    //     }}>
+    //         <h3>To join <span style={{ color: '#38b3ff' }}>{stream?.title}</span> stream, you must sign in to the metamask</h3>
+    //     </div>
+    // }
 
     return <>
         {stream && initilized ?
             address && address === stream.ownerAddress ?
-                <StreamRecord stream={stream} /> : <StreamView stream={stream} />
+                <StreamRecord stream={stream} address={address} /> : 
+                <StreamView stream={stream} address={address} />
             : '...'
         }
     </>

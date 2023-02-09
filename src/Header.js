@@ -56,7 +56,8 @@ export function Header() {
                 display: 'flex',
                 justifyContent: 'space-between',
                 backgroundColor: "#282c34",
-                padding: '30px'
+                padding: '30px',
+                flexWrap: 'wrap'
             }}
         >
             {/* <div onClick={() => navigator('/')} className="App-button">
