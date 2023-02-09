@@ -1,12 +1,14 @@
-import { action, autorun, computed, observable } from 'mobx';
+import { action, autorun, computed, makeAutoObservable, observable } from 'mobx';
 import detectEthereumProvider from '@metamask/detect-provider';
-import { StoreConstructor } from './core/StoreConstructor';
 import Web3 from 'web3';
 import { getChainConfig } from './helpers';
+import { IStores } from 'stores';
 
 const defaults = {};
 
-export class UserStoreMetamask extends StoreConstructor {
+export class UserStoreMetamask {
+  public stores: IStores;
+
   @observable public isAuthorized: boolean;
   @observable error: string = '';
 
@@ -14,12 +16,14 @@ export class UserStoreMetamask extends StoreConstructor {
   private provider: any;
 
   @observable public balance = '0';
-  @observable public ethAddress: string;
+  @observable public address: string = '';
 
   @observable metamaskChainId = 0;
 
   constructor(stores) {
-    super(stores);
+    this.stores = stores;
+
+    makeAutoObservable(this)
 
     setInterval(() => this.updateBalance(), 3 * 1000);
 
@@ -27,13 +31,13 @@ export class UserStoreMetamask extends StoreConstructor {
 
     const sessionObj = JSON.parse(session);
 
-    if (sessionObj && sessionObj.ethAddress) {
+    if (sessionObj && !!sessionObj.address) {
       this.signIn();
     }
 
     autorun(() => {
       if (this.isNetworkActual) {
-        this.signIn();
+        // this.signIn();
       }
     });
   }
@@ -46,22 +50,24 @@ export class UserStoreMetamask extends StoreConstructor {
   }
 
   @action.bound
-  async updateBalance() {
-    const balanceHex = await this.provider.request({
-      method: 'eth_getBalance',
-      params: [this.ethAddress, 'latest'],
-    });
+  updateBalance = async () => {
+    if (this.address) {
+      const balanceHex = await this.provider.request({
+        method: 'eth_getBalance',
+        params: [this.address, 'latest'],
+      });
 
-    const balance = Number(balanceHex);
-    this.balance = balance.toString();
+      const balance = Number(balanceHex);
+      this.balance = balance.toString();
+    }
   }
 
   @action.bound
-  handleAccountsChanged(accounts) {
+  handleAccountsChanged = (accounts) => {
     if (accounts.length === 0) {
-      return this.setError('Please connect to MetaMask');
+      this.signOut();
     } else {
-      this.ethAddress = accounts[0];
+      this.address = accounts[0];
 
       try {
         this.updateBalance();
@@ -74,17 +80,17 @@ export class UserStoreMetamask extends StoreConstructor {
   }
 
   @action.bound
-  setError(error: string) {
+  setError = (error: string) => {
     this.error = error;
     this.isAuthorized = false;
   }
 
   @action.bound
-  public async signOut() {
+  public signOut = async () => {
     console.log('### metamask signout');
 
     this.isAuthorized = false;
-    this.ethAddress = '';
+    this.address = '';
 
     this.syncLocalStorage();
 
@@ -99,7 +105,7 @@ export class UserStoreMetamask extends StoreConstructor {
   }
 
   @action.bound
-  public async signIn(isNew = false) {
+  public signIn = async (isNew = false) => {
     console.log('### metamask signin');
 
     try {
@@ -124,7 +130,7 @@ export class UserStoreMetamask extends StoreConstructor {
         console.log('### metamask disconnect', params);
 
         this.isAuthorized = false;
-        this.ethAddress = null;
+        this.address = null;
       });
 
       const handleChangeNetwork = chainId => {
@@ -159,7 +165,7 @@ export class UserStoreMetamask extends StoreConstructor {
         .catch(err => {
           if (err.code === 4001) {
             this.isAuthorized = false;
-            this.ethAddress = null;
+            this.address = null;
             this.syncLocalStorage();
             return this.setError('Please connect to MetaMask.');
           } else {
@@ -172,8 +178,8 @@ export class UserStoreMetamask extends StoreConstructor {
     }
   }
 
-  @action
-  public async switchNetwork() {
+  @action.bound
+  public switchNetwork = async () => {
     const config = getChainConfig();
     try {
       await this.provider.request({
@@ -198,16 +204,17 @@ export class UserStoreMetamask extends StoreConstructor {
     }
   }
 
-  public syncLocalStorage() {
+  @action.bound
+  public syncLocalStorage = () => {
     localStorage.setItem(
       'harmony_metamask_session',
       JSON.stringify({
-        ethAddress: this.ethAddress,
+        address: this.address || "",
       }),
     );
   }
 
-  @action public reset() {
+  @action.bound public reset = () => {
     Object.assign(this, defaults);
   }
 }

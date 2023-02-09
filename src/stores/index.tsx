@@ -2,12 +2,12 @@ import { UserStoreMetamask } from './UserStoreMetamask';
 import { createStoresContext } from './create-context';
 
 export interface IStores {
-  userMetamask?: UserStoreMetamask;
+  user?: UserStoreMetamask;
 }
 
 const stores: IStores = {};
 
-stores.userMetamask = new UserStoreMetamask(stores);
+stores.user = new UserStoreMetamask(stores);
 
 //@ts-ignore
 window.stores = stores;

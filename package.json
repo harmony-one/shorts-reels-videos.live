@@ -47,6 +47,7 @@
     "js-cookie": "^3.0.1",
     "mini-css-extract-plugin": "^2.4.5",
     "mobx": "^6.8.0",
+    "mobx-react": "^7.6.0",
     "mobx-react-lite": "^3.4.0",
     "postcss": "^8.4.4",
     "postcss-flexbugs-fixes": "^5.0.2",

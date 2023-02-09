@@ -1,97 +1,46 @@
-import React, { useEffect } from 'react';
-import './App.css';
-import { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RecIcon } from './icons/RecIcon';
 import { Box } from 'grommet';
+import { observer } from 'mobx-react-lite';
+import { useStores } from 'stores';
+import { Button } from 'components/Button';
 
-export function Header() {
-    const [loading, setLoading] = useState(false);
+export const Header = observer(() => {
     const navigator = useNavigate();
-    const [address, setAddress] = useState('');
-
-    const handleAccountsChanged = (accounts) => {
-        if (accounts.length) {
-            localStorage.setItem('live_profile',
-                JSON.stringify({
-                    address: accounts[0]
-                })
-            )
-
-            setAddress(accounts[0])
-        } else {
-            removeAccounts()
-        }
-    }
-
-    const removeAccounts = () => {
-        localStorage.removeItem('live_profile')
-        setAddress('');
-    }
-
-    useEffect(() => {
-        const profileStr = localStorage.getItem('live_profile');
-
-        const profile = profileStr && JSON.parse(profileStr);
-
-        if (profile?.address) {
-            connectMetamask();
-        }
-
-        //@ts-ignore
-        window.ethereum?.on('accountsChanged', handleAccountsChanged);
-    }, []);
-
-    const connectMetamask = () => {
-        //@ts-ignore
-        if (window.ethereum) {
-            //@ts-ignore
-            window.ethereum.request({ method: 'eth_requestAccounts' })
-                .then(handleAccountsChanged)
-                .catch(removeAccounts)
-        } else {
-            removeAccounts()
-        }
-    }
+    const { user } = useStores();
 
     return (
-        <Box justify="between" pad="large" wrap={true} background="#282c34">
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <div>
-                    {
-                        address ?
-                            <div className='App-address'>
-                                Your address: <span style={{ color: '#38b3ff' }}>
-                                    {address.slice(0, 8)}...{address.slice(35)}
-                                </span>
-                            </div> :
-                            <div onClick={() => connectMetamask()} className="App-button">
-                                Connect to Metamask
-                            </div>
-                    }
-                </div>
-            </div>
+        <Box direction="row" justify="between" pad={{ horizontal: 'large' }} wrap={true}>
+            <Box margin={{ top: 'large' }}>
+                {
+                    user.address ?
+                        <div className='App-address'>
+                            Your address: <span style={{ color: '#38b3ff' }}>
+                                {user.address.slice(0, 8)}...{user.address.slice(35)}
+                            </span>
+                        </div> :
+                        <Button onClick={() => user.signIn()}>
+                            Connect to Metamask
+                        </Button>
+                }
+            </Box>
 
-
-            <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <Box direction="row" margin={{ top: 'large' }}>
                 {window.location.pathname === '/' &&
-                    <div
-                        onClick={() => navigator('/go-live')}
-                        className="App-button"
-                    >
+                    <Button onClick={() => navigator('/go-live')}>
                         <RecIcon style={{ marginRight: 10 }} />
-                        {!loading ? "Go Live" : '...'}
-                    </div>
+                        Go Live
+                    </Button>
                 }
 
-                <div
+                <Button
                     onClick={() => navigator('/')}
-                    className="App-button"
-                    style={{ marginLeft: 30 }}
+                    margin={{ left: "30px" }}
                 >
                     {"All Streams"}
-                </div>
-            </div>
+                </Button>
+            </Box>
         </Box>
     );
-}
+})
