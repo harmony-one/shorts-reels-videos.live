@@ -45,6 +45,19 @@ export const Participant = ({ participant }) => {
     };
   }, [participant, attachTrack, detachTrack]);
 
+  // const toggleFullScreen = () => {
+  //   var el = mediaEl.current;
+  //   if (el.requestFullscreen) {
+  //     el.requestFullscreen();
+  //   } else if (el.msRequestFullscreen) {
+  //     el.msRequestFullscreen();
+  //   } else if (el.mozRequestFullScreen) {
+  //     el.mozRequestFullScreen();
+  //   } else if (el.webkitRequestFullscreen) {
+  //     el.webkitRequestFullscreen();
+  //   }
+  // };
+
   return (
     <div>
       {/* <h2>{participant.connectionId}</h2> */}
@@ -53,6 +66,7 @@ export const Participant = ({ participant }) => {
         autoPlay
         playsInline
         muted={isLocal}
+        controls
         style={{ width: "1024px", height: "auto", maxWidth: '100vw' }}
       />
     </div>

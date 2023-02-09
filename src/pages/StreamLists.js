@@ -2,6 +2,9 @@ import { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { deleteLiveStream, getLiveStreams } from '../utils';
 
+import { MdDeleteForever } from '@react-icons/all-files/md/MdDeleteForever';
+import { AiOutlineLoading3Quarters } from '@react-icons/all-files/ai/AiOutlineLoading3Quarters'
+
 export const StreamList = () => {
     const [streamsList, setStreamsList] = useState([]);
     const [deleting, setDeleting] = useState(false);
@@ -37,7 +40,7 @@ export const StreamList = () => {
     }, []);
 
     return (
-        <>
+        <div className="content" style={{ flexDirection: 'column' }}>
             <h2>
                 Live Streams:
             </h2>
@@ -53,7 +56,7 @@ export const StreamList = () => {
                         <div
                             key={stream.id}
                             style={{
-                                margin: '20px 0px',
+                                margin: '20px 20px',
                                 display: 'flex',
                                 flexDirection: 'row',
                                 justifyContent: 'space-around',
@@ -69,7 +72,8 @@ export const StreamList = () => {
                                     flexDirection: 'row',
                                     justifyContent: 'space-between',
                                     alignItems: 'space-between',
-                                    minWidth: 600
+                                    width: 600
+                                    // minWidth: 600
                                 }}
                             >
                                 <div style={{
@@ -91,9 +95,9 @@ export const StreamList = () => {
 
                                 <div
                                     className="App-button"
-                                    onClick={() => stream.status === "active" && navigate(`/streams/${stream.id}`)}
+                                    onClick={() => true && navigate(`/streams/${stream.id}`)}
                                     style={{
-                                        opacity: stream.status === "active" ? 1 : 0.3,
+                                        opacity: true ? 1 : 0.3,
                                     }}
                                 >
                                     {"Stream"}
@@ -102,15 +106,20 @@ export const StreamList = () => {
                             <span
                                 onClick={() => removeStream(stream.id)}
                                 style={{
-                                    cursor: 'pointer'
+                                    cursor: 'pointer',
+                                    marginLeft: 20
                                 }}
                             >
-                                {deleting === stream.id ? "Deleting..." : "Delete"}
+                                {
+                                    deleting === stream.id ?
+                                        "..."
+                                        : <MdDeleteForever size="30" />
+                                }
                             </span>
                         </div>
                     )
                 })}
             </div> : "..."}
-        </>
+        </div>
     );
 }
