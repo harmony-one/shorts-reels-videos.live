@@ -1,13 +1,13 @@
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useEffect, useState } from 'react';
 import { StreamRecord } from './StreamRecord';
 import { StreamView } from './StreamView';
 import { getLiveStream } from '../../utils';
 
 export const Stream = () => {
-    const [initilized, setInitilized] = useState();
+    const [initilized, setInitilized] = useState(false);
     const [address, setAddress] = useState('');
-    const [stream, setStream] = useState();
+    const [stream, setStream] = useState(null);
 
     const navigate = useNavigate();
 
@@ -39,9 +39,9 @@ export const Stream = () => {
         }
     }
 
-    const removeAccounts = (accounts) => {
+    const removeAccounts = () => {
         localStorage.removeItem('live_profile')
-        setAddress()
+        setAddress('')
     }
 
     useEffect(() => {
@@ -55,11 +55,14 @@ export const Stream = () => {
 
         setInitilized(true);
 
+        //@ts-ignore
         window.ethereum?.on('accountsChanged', handleAccountsChanged);
     }, []);
 
     const connectMetamask = () => {
+        //@ts-ignore
         if (window.ethereum) {
+            //@ts-ignore
             window.ethereum.request({ method: 'eth_requestAccounts' })
                 .then(handleAccountsChanged)
                 .catch(removeAccounts)

@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { deleteLiveStream, getLiveStreams } from '../utils';
 
@@ -13,7 +13,7 @@ export const StreamList = () => {
 
     const loadStreams = useCallback(async () => {
         return await getLiveStreams().then(res => setStreamsList(res.data));
-    });
+    }, []);
 
     const removeStream = useCallback(async (liveStreamId) => {
         setDeleting(liveStreamId);
@@ -27,7 +27,7 @@ export const StreamList = () => {
         await loadStreams();
 
         setDeleting(null);
-    })
+    }, [])
 
     useEffect(() => {
         const intervalId = setInterval(() => {

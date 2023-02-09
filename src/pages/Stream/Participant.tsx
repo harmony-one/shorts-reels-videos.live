@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef } from "react";
 import {
   LocalParticipant,
   ParticipantEvent,
@@ -18,7 +18,7 @@ export const Participant = ({ participant }) => {
   }, []);
 
   useEffect(() => {
-    if (!mediaEl.current) return;
+    if (!mediaEl.current) return null;
 
     const microphoneTrack = participant
       .getAudioTracks()

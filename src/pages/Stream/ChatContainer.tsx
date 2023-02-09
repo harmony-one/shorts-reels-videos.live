@@ -33,7 +33,7 @@ export const ChatContainer = () => {
             setClient(newClient);
         };
 
-        const existingChannel = newClient.getChannelById('livestream', '2');
+        const existingChannel = newClient.getChannelById('livestream', '2', {});
         setChannel(existingChannel);
 
         newClient.on('connection.changed', handleConnectionChange);
