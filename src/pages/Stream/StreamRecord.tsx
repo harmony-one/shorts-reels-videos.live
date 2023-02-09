@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Space, SpaceEvent, getUserMedia } from "@mux/spaces-web";
 import { getLiveStream, startLiveStream, getLiveStreamToken } from '../../utils';
 
@@ -8,8 +8,8 @@ import { RecIcon } from "../../icons/RecIcon";
 
 const sleep = (ms) => new Promise(res => setTimeout(res, ms));
 
-export function StreamRecord({ stream }) {
-    const [space, setSpace] = useState();
+export function StreamRecord({ stream, address }) {
+    const [space, setSpace] = useState(null);
     const [localParticipant, setLocalParticipant] = useState(null);
     // const [participants, setParticipants] = useState([]);
     const joined = !!localParticipant;
@@ -83,7 +83,7 @@ export function StreamRecord({ stream }) {
                 {!localParticipant &&
                     <div
                         onClick={join}
-                        disabled={joined}
+                        // disabled={joined}
                         className="App-button"
                         style={{
                             margin: '20px 0',

@@ -23,9 +23,9 @@ export function Header() {
         }
     }
 
-    const removeAccounts = (accounts) => {
+    const removeAccounts = () => {
         localStorage.removeItem('live_profile')
-        setAddress()
+        setAddress('');
     }
 
     useEffect(() => {
@@ -37,11 +37,14 @@ export function Header() {
             connectMetamask();
         }
 
+        //@ts-ignore
         window.ethereum?.on('accountsChanged', handleAccountsChanged);
     }, []);
 
     const connectMetamask = () => {
+        //@ts-ignore
         if (window.ethereum) {
+            //@ts-ignore
             window.ethereum.request({ method: 'eth_requestAccounts' })
                 .then(handleAccountsChanged)
                 .catch(removeAccounts)

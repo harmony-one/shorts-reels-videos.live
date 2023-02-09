@@ -1,4 +1,4 @@
-import { useCallback, useState } from "react";
+import React, { useCallback, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { getPaymentLink } from "../../utils";
 import { ChatContainer } from "./ChatContainer";
@@ -22,7 +22,9 @@ export const StreamView = ({ stream, address }) => {
 
             let accounts = [];
 
+            //@ts-ignore
             if (window.ethereum) {
+                //@ts-ignore
                 accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             }
 
@@ -48,7 +50,6 @@ export const StreamView = ({ stream, address }) => {
                 width: '1400px',
                 display: 'flex',
                 flexDirection: 'row',
-                marginTop: 0,
                 border: '1px solid white',
                 borderRadius: '10px',
                 overflow: 'hidden',

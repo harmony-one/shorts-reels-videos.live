@@ -20,7 +20,9 @@ export function CreateStream(props) {
 
             let accounts = [];
 
+            //@ts-ignore
             if (window.ethereum) {
+                //@ts-ignore
                 accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
             }
 
