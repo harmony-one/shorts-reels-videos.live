@@ -3,6 +3,7 @@ import './App.css';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RecIcon } from './icons/RecIcon';
+import { Box } from 'grommet';
 
 export function Header() {
     const [loading, setLoading] = useState(false);
@@ -54,23 +55,7 @@ export function Header() {
     }
 
     return (
-        <div
-            style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                backgroundColor: "#282c34",
-                padding: '30px',
-                flexWrap: 'wrap'
-            }}
-        >
-            {/* <div onClick={() => navigator('/')} className="App-button">
-                {"All Streams"}
-            </div> */}
-            {/* {window.location.pathname === '/' &&
-                <div onClick={() => create()} className="App-button">
-                    {!loading ? "Go Live" : '...'}
-                </div>} */}
-
+        <Box justify="between" pad="large" wrap={true} background="#282c34">
             <div style={{ display: 'flex', flexDirection: 'column' }}>
                 <div>
                     {
@@ -107,6 +92,6 @@ export function Header() {
                     {"All Streams"}
                 </div>
             </div>
-        </div>
+        </Box>
     );
 }
