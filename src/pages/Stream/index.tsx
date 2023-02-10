@@ -22,19 +22,18 @@ export const Stream = observer(() => {
         return null;
     }
 
-    return (<Box direction="row" fill={true}>
+    return (<Box direction="row" fill={true} gap="medium" margin={{ top: 'small' }}>
         <Box direction="column" fill={true}>
-            <Box style={{ border: '1px solid grey' }} fill={true}>
-                <VideoView />
-            </Box>
-            <Box style={{ border: '1px solid grey', minHeight: '70px' }}>
+            <VideoView />
+
+            <Box style={{ borderTop: '1px solid white', minHeight: '70px' }}>
                 <StreamFooter />
             </Box>
         </Box>
 
         {
             stream.chatVisible &&
-            <Box style={{ border: '1px solid grey', minWidth: '400px' }}>
+            <Box style={{ border: '1px solid #dfdfdf70', borderRadius: 7, minWidth: '400px' }}>
                 <ChatContainer />
             </Box>
         }
