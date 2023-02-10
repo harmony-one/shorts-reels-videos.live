@@ -24,7 +24,7 @@ export const StreamPreview = ({ stream, onRemove }) => {
     }, [])
 
     return (
-        <Box margin="20px" direction="row" align='center' justify='around'>
+        <Box direction="row" align='center' justify='around' style={{ minHeight: '110px' }}>
             <Box
                 direction="row"
                 align="between"

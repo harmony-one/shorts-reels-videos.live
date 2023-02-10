@@ -1,90 +1,42 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { StreamRecord } from './StreamRecord';
-import { StreamView } from './StreamView';
-import { getLiveStream } from '../../utils';
+import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
+import { useStores } from 'stores';
+import { ChatContainer } from "./Chat/ChatContainer";
+import { Box } from "grommet";
+import { VideoView } from "./VideoView";
+import { StreamFooter } from "./Footer";
 
-export const Stream = () => {
-    const [initilized, setInitilized] = useState(false);
-    const [address, setAddress] = useState('');
-    const [stream, setStream] = useState(null);
-
-    const navigate = useNavigate();
+export const Stream = observer(() => {
+    const { stream, user } = useStores();
 
     const { id } = useParams();
 
     useEffect(() => {
-        const intervalId = setInterval(() => {
-            getLiveStream(id, address).then(res => setStream(res.data));
-        }, 4000);
+        stream.loadStream(id);
 
-        // if (address) {
-            getLiveStream(id, address).then(res => setStream(res.data));
-        //}
+        return () => stream.clean();
+    }, [id])
 
-        return () => clearInterval(intervalId);
-    }, [id, address])
-
-    const handleAccountsChanged = (accounts) => {
-        if (accounts.length) {
-            localStorage.setItem('live_profile',
-                JSON.stringify({
-                    address: accounts[0]
-                })
-            )
-
-            setAddress(accounts[0])
-        } else {
-            removeAccounts()
-        }
+    if (!stream.isInitilized || !user.isInitilized) {
+        return null;
     }
 
-    const removeAccounts = () => {
-        localStorage.removeItem('live_profile')
-        setAddress('')
-    }
+    return (<Box direction="row" fill={true}>
+        <Box direction="column" fill={true}>
+            <Box style={{ border: '1px solid grey' }} fill={true}>
+                <VideoView />
+            </Box>
+            <Box style={{ border: '1px solid grey', minHeight: '70px' }}>
+                <StreamFooter />
+            </Box>
+        </Box>
 
-    useEffect(() => {
-        const profileStr = localStorage.getItem('live_profile');
-
-        const profile = profileStr && JSON.parse(profileStr);
-
-        if (profile?.address) {
-            connectMetamask();
+        {
+            stream.chatVisible &&
+            <Box style={{ border: '1px solid grey', minWidth: '400px' }}>
+                <ChatContainer />
+            </Box>
         }
-
-        setInitilized(true);
-
-        //@ts-ignore
-        window.ethereum?.on('accountsChanged', handleAccountsChanged);
-    }, []);
-
-    const connectMetamask = () => {
-        //@ts-ignore
-        if (window.ethereum) {
-            //@ts-ignore
-            window.ethereum.request({ method: 'eth_requestAccounts' })
-                .then(handleAccountsChanged)
-                .catch(removeAccounts)
-        } else {
-            removeAccounts()
-        }
-    }
-
-    // if (!address) {
-    //     return <div style={{
-    //         marginTop: 100
-    //     }}>
-    //         <h3>To join <span style={{ color: '#38b3ff' }}>{stream?.title}</span> stream, you must sign in to the metamask</h3>
-    //     </div>
-    // }
-
-    return <>
-        {stream && initilized ?
-            address && address === stream.ownerAddress ?
-                <StreamRecord stream={stream} address={address} /> : 
-                <StreamView stream={stream} address={address} />
-            : '...'
-        }
-    </>
-}
+    </Box>);
+});

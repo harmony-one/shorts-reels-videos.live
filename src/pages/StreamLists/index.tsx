@@ -21,12 +21,12 @@ export const StreamList = () => {
     }, []);
 
     return (
-        <Box align="center" justify="center" pad={{ top: 'large' }}>
+        <Box align="center" justify="center" pad={{ top: 'large' }} overflow="scroll">
             <h2>
                 Live Streams:
             </h2>
 
-            {streamsList.length ? <Box width='800px'>
+            {streamsList.length ? <Box width='800px' gap="20px">
                 {streamsList.map(stream =>
                     <StreamPreview
                         key={stream.id}

@@ -11,22 +11,29 @@ export const Header = observer(() => {
     const { user } = useStores();
 
     return (
-        <Box direction="row" justify="between" pad={{ horizontal: 'large' }} wrap={true}>
-            <Box margin={{ top: 'large' }}>
+        <Box
+            direction="row"
+            justify="between"
+            align="center"
+            wrap={true}
+        >
+            <Box margin={{ top: 'medium' }}>
                 {
-                    user.address ?
-                        <div className='App-address'>
-                            Your address: <span style={{ color: '#38b3ff' }}>
-                                {user.address.slice(0, 8)}...{user.address.slice(35)}
-                            </span>
-                        </div> :
-                        <Button onClick={() => user.signIn()}>
-                            Connect to Metamask
-                        </Button>
+                    user.isInitilized ?
+                        user.address ?
+                            <div className='App-address'>
+                                Your address: <span style={{ color: '#38b3ff' }}>
+                                    {user.address.slice(0, 8)}...{user.address.slice(35)}
+                                </span>
+                            </div> :
+                            <Button onClick={() => user.signIn()}>
+                                Connect to Metamask
+                            </Button> :
+                        null
                 }
             </Box>
 
-            <Box direction="row" margin={{ top: 'large' }}>
+            <Box direction="row" margin={{ top: 'medium' }}>
                 {window.location.pathname === '/' &&
                     <Button onClick={() => navigator('/go-live')}>
                         <RecIcon style={{ marginRight: 10 }} />

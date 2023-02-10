@@ -9,7 +9,8 @@ const defaults = {};
 export class UserStoreMetamask {
   public stores: IStores;
 
-  @observable public isAuthorized: boolean;
+  @observable public isAuthorized: boolean = false;
+  @observable public isInitilized: boolean = false;
   @observable error: string = '';
 
   @observable public isMetaMask = false;
@@ -33,6 +34,8 @@ export class UserStoreMetamask {
 
     if (sessionObj && !!sessionObj.address) {
       this.signIn();
+    } else {
+      this.isInitilized = true;
     }
 
     autorun(() => {
@@ -161,10 +164,12 @@ export class UserStoreMetamask {
           }
 
           this.isAuthorized = true;
+          this.isInitilized = true;
         })
         .catch(err => {
           if (err.code === 4001) {
             this.isAuthorized = false;
+            this.isInitilized = true;
             this.address = null;
             this.syncLocalStorage();
             return this.setError('Please connect to MetaMask.');

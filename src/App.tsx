@@ -4,13 +4,18 @@ import { Routes, Route } from 'react-router-dom';
 import { StreamList } from './pages/StreamLists';
 import { Stream } from './pages/Stream';
 import { Header } from './Header';
-import { CreateStream } from './pages/Stream/CreateStream';
+import { CreateStream } from './pages/CreateStream';
 import { Box } from 'grommet';
 import { BodyContainer } from 'components/BodyContainer';
 
 function App() {
   return (
-    <Box>
+    <Box
+      fill={true}
+      pad={{ horizontal: 'medium', bottom: 'medium' }}
+      style={{ height: '100vh' }}
+      gap="20px"
+    >
       <Header />
       <BodyContainer>
         <Routes>

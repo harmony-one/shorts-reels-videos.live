@@ -1,10 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { Space, SpaceEvent, getUserMedia } from "@mux/spaces-web";
-import { getLiveStream, startLiveStream, getLiveStreamToken } from '../../utils';
+import { getLiveStream, startLiveStream, getLiveStreamToken } from 'utils';
 
 import { Participant } from "./Participant";
 import { useParams } from "react-router-dom";
-import { RecIcon } from "../../icons/RecIcon";
+import { RecIcon } from "icons/RecIcon";
 
 const sleep = (ms) => new Promise(res => setTimeout(res, ms));
 
