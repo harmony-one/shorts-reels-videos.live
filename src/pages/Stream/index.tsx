@@ -49,7 +49,7 @@ export const Stream = observer(() => {
 
     return (<Box direction="row" fill={true} gap="medium" margin={{ top: 'small' }}>
         <Box direction="column" fill={true}>
-            <Box>
+            <Box fill={true}>
                 <VideoView />
             </Box>
 

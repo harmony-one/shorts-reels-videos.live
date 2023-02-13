@@ -13,8 +13,8 @@ import {
 import '@stream-io/stream-chat-css/dist/css/index.css';
 import './stream_chat.css';
 
-const filters = { 
-    type: 'livestream', 
+const filters = {
+    type: 'livestream',
     id: '1'
 };
 
@@ -69,7 +69,11 @@ export const ChatContainer = () => {
             <Channel channel={channel}>
                 <Window>
                     <ChannelHeader />
-                    <MessageList />
+                    <MessageList
+                        noGroupByUser={true}
+                        disableDateSeparator={true}
+                        hideDeletedMessages={true}
+                    />
                     <MessageInput />
                 </Window>
                 <Thread />

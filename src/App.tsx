@@ -13,7 +13,7 @@ function App() {
     <Box
       fill={true}
       pad={{ horizontal: 'medium', bottom: 'medium' }}
-      style={{ height: '100vh' }}
+      style={{ height: '100%', position: 'fixed', overflow: 'hidden' }}
       gap="20px"
     >
       <Header />

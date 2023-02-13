@@ -29,3 +29,51 @@ svg.str-chat__message-action-icon {
 mux-player {
     height: 100%;
 }
+
+.str-chat__avatar-fallback {
+    background: url("./one.svg") no-repeat center;
+}
+
+.str-chat__message-simple-timestamp {
+    display: none;
+}
+
+.str-chat__li--top {
+    padding: 0;
+}
+
+.str-chat__li--single {
+    padding: 0;
+}
+
+.str-chat__input-flat {
+    padding: 0;
+}
+
+.str-chat__header-hamburger {
+    display: none;
+}
+
+.str-chat__message {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+    align-items: flex-start;
+}
+
+.str-chat__message-inner {
+    margin-left: 10px !important;
+}
+
+.str-chat__message-text-inner {
+    background: white !important;
+    padding: 0;
+}
+
+.str-chat__message-inner >.str-chat__message-simple__actions {
+    display: none;
+}
+
+.str-chat__list .str-chat__reverse-infinite-scroll {
+    padding: 20px 0px;
+}
