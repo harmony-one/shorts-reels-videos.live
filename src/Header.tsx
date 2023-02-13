@@ -1,97 +1,55 @@
-import React, { useEffect } from 'react';
-import './App.css';
-import { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { RecIcon } from './icons/RecIcon';
-import { Box } from 'grommet';
+import { Box, Text } from 'grommet';
+import { observer } from 'mobx-react-lite';
+import { useStores } from 'stores';
+import { Button } from 'components/Button';
+import { MetamaskButton } from 'components/MetamaskButton';
+import { useMediaQuery } from 'react-responsive';
 
-export function Header() {
-    const [loading, setLoading] = useState(false);
+export const Header = observer(() => {
     const navigator = useNavigate();
-    const [address, setAddress] = useState('');
-
-    const handleAccountsChanged = (accounts) => {
-        if (accounts.length) {
-            localStorage.setItem('live_profile',
-                JSON.stringify({
-                    address: accounts[0]
-                })
-            )
-
-            setAddress(accounts[0])
-        } else {
-            removeAccounts()
-        }
-    }
-
-    const removeAccounts = () => {
-        localStorage.removeItem('live_profile')
-        setAddress('');
-    }
-
-    useEffect(() => {
-        const profileStr = localStorage.getItem('live_profile');
-
-        const profile = profileStr && JSON.parse(profileStr);
-
-        if (profile?.address) {
-            connectMetamask();
-        }
-
-        //@ts-ignore
-        window.ethereum?.on('accountsChanged', handleAccountsChanged);
-    }, []);
-
-    const connectMetamask = () => {
-        //@ts-ignore
-        if (window.ethereum) {
-            //@ts-ignore
-            window.ethereum.request({ method: 'eth_requestAccounts' })
-                .then(handleAccountsChanged)
-                .catch(removeAccounts)
-        } else {
-            removeAccounts()
-        }
-    }
+    const { user } = useStores();
+    const isSmallMobile = useMediaQuery({ query: '(max-width: 500px)' })
 
     return (
-        <Box justify="between" pad="large" wrap={true} background="#282c34">
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <div>
-                    {
-                        address ?
-                            <div className='App-address'>
+        <Box
+            direction="row"
+            justify={isSmallMobile ? "center" : "between"}
+            align="center"
+            wrap={true}
+            gap="10px"
+        >
+            <Box margin={{ top: 'medium' }}>
+                {
+                    user.isInitilized ?
+                        user.address ?
+                            <Text size="18px">
                                 Your address: <span style={{ color: '#38b3ff' }}>
-                                    {address.slice(0, 8)}...{address.slice(35)}
+                                    {user.address.slice(0, 8)}...{user.address.slice(35)}
                                 </span>
-                            </div> :
-                            <div onClick={() => connectMetamask()} className="App-button">
-                                Connect to Metamask
-                            </div>
-                    }
-                </div>
-            </div>
+                            </Text> :
+                            <MetamaskButton
+                                active={true}
+                                onClick={() => user.signIn()}
+                            /> :
+                        null
+                }
+            </Box>
 
-
-            <div style={{ display: 'flex', flexDirection: 'row' }}>
+            <Box direction="row" margin={{ top: 'medium' }} gap="30px">
                 {window.location.pathname === '/' &&
-                    <div
-                        onClick={() => navigator('/go-live')}
-                        className="App-button"
-                    >
+                    <Button onClick={() => navigator('/go-live')}>
                         <RecIcon style={{ marginRight: 10 }} />
-                        {!loading ? "Go Live" : '...'}
-                    </div>
+                        Go Live
+                    </Button>
                 }
 
-                <div
-                    onClick={() => navigator('/')}
-                    className="App-button"
-                    style={{ marginLeft: 30 }}
-                >
+                <Button onClick={() => navigator('/')} >
                     {"All Streams"}
-                </div>
-            </div>
+                </Button>
+            </Box>
         </Box>
     );
-}
+})

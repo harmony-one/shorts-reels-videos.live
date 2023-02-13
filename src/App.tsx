@@ -1,23 +1,30 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import './App.css';
+// import './App.css';
 import { StreamList } from './pages/StreamLists';
 import { Stream } from './pages/Stream';
 import { Header } from './Header';
-import { CreateStream } from './pages/Stream/CreateStream';
+import { CreateStream } from './pages/CreateStream';
+import { Box } from 'grommet';
+import { BodyContainer } from 'components/BodyContainer';
 
 function App() {
   return (
-    <div className="App">
+    <Box
+      fill={true}
+      pad={{ horizontal: 'medium', bottom: 'medium' }}
+      style={{ height: '100vh' }}
+      gap="20px"
+    >
       <Header />
-      <div className="App-body">
+      <BodyContainer>
         <Routes>
           <Route path="/" element={<StreamList />} />
           <Route path="/go-live" element={<CreateStream />} />
           <Route path="/streams/:id" element={<Stream />} />
         </Routes>
-      </div>
-    </div>
+      </BodyContainer>
+    </Box>
 
   );
 }

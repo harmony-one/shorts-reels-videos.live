@@ -1,13 +1,16 @@
 import { UserStoreMetamask } from './UserStoreMetamask';
 import { createStoresContext } from './create-context';
+import { ActiveStream } from './ActiveStream';
 
 export interface IStores {
-  userMetamask?: UserStoreMetamask;
+  user?: UserStoreMetamask;
+  stream?: ActiveStream;
 }
 
 const stores: IStores = {};
 
-stores.userMetamask = new UserStoreMetamask(stores);
+stores.user = new UserStoreMetamask(stores);
+stores.stream = new ActiveStream(stores);
 
 //@ts-ignore
 window.stores = stores;

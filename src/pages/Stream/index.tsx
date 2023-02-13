@@ -1,90 +1,68 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { StreamRecord } from './StreamRecord';
-import { StreamView } from './StreamView';
-import { getLiveStream } from '../../utils';
+import React, { useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import { observer } from 'mobx-react-lite';
+import { useStores } from 'stores';
+import { ChatContainer } from "./Chat/ChatContainer";
+import { Box } from "grommet";
+import { VideoView } from "./VideoView";
+import { StreamFooter } from "./Footer";
+import { useMediaQuery } from 'react-responsive'
 
-export const Stream = () => {
-    const [initilized, setInitilized] = useState(false);
-    const [address, setAddress] = useState('');
-    const [stream, setStream] = useState(null);
-
-    const navigate = useNavigate();
+export const Stream = observer(() => {
+    const { stream, user } = useStores();
+    const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1024px)' })
 
     const { id } = useParams();
 
     useEffect(() => {
-        const intervalId = setInterval(() => {
-            getLiveStream(id, address).then(res => setStream(res.data));
-        }, 4000);
-
-        // if (address) {
-            getLiveStream(id, address).then(res => setStream(res.data));
-        //}
-
-        return () => clearInterval(intervalId);
-    }, [id, address])
-
-    const handleAccountsChanged = (accounts) => {
-        if (accounts.length) {
-            localStorage.setItem('live_profile',
-                JSON.stringify({
-                    address: accounts[0]
-                })
-            )
-
-            setAddress(accounts[0])
-        } else {
-            removeAccounts()
-        }
-    }
-
-    const removeAccounts = () => {
-        localStorage.removeItem('live_profile')
-        setAddress('')
-    }
+        stream.chatVisible = !isTabletOrMobile;
+    }, [isTabletOrMobile]);
 
     useEffect(() => {
-        const profileStr = localStorage.getItem('live_profile');
+        stream.loadStream(id);
 
-        const profile = profileStr && JSON.parse(profileStr);
+        return () => stream.clean();
+    }, [id])
 
-        if (profile?.address) {
-            connectMetamask();
-        }
-
-        setInitilized(true);
-
-        //@ts-ignore
-        window.ethereum?.on('accountsChanged', handleAccountsChanged);
-    }, []);
-
-    const connectMetamask = () => {
-        //@ts-ignore
-        if (window.ethereum) {
-            //@ts-ignore
-            window.ethereum.request({ method: 'eth_requestAccounts' })
-                .then(handleAccountsChanged)
-                .catch(removeAccounts)
-        } else {
-            removeAccounts()
-        }
+    if (!stream.isInitilized || !user.isInitilized) {
+        return null;
     }
 
-    // if (!address) {
-    //     return <div style={{
-    //         marginTop: 100
-    //     }}>
-    //         <h3>To join <span style={{ color: '#38b3ff' }}>{stream?.title}</span> stream, you must sign in to the metamask</h3>
-    //     </div>
-    // }
+    if (isTabletOrMobile) {
+        return (<Box direction="column" fill={true} gap="medium" margin={{ top: 'small' }}>
+            {
+                !stream.chatVisible && <VideoView />
+            }
 
-    return <>
-        {stream && initilized ?
-            address && address === stream.ownerAddress ?
-                <StreamRecord stream={stream} address={address} /> : 
-                <StreamView stream={stream} address={address} />
-            : '...'
+            <Box style={{ borderTop: '1px solid white', minHeight: '70px' }}>
+                <StreamFooter />
+            </Box>
+
+            {
+                stream.chatVisible &&
+                <Box style={{ border: '1px solid #dfdfdf70', borderRadius: 7 }} fill={true}>
+                    <ChatContainer />
+                </Box>
+            }
+        </Box>);
+    }
+
+    return (<Box direction="row" fill={true} gap="medium" margin={{ top: 'small' }}>
+        <Box direction="column" fill={true}>
+            <Box>
+                <VideoView />
+            </Box>
+
+            <Box style={{ borderTop: '1px solid white', minHeight: '70px' }}>
+                <StreamFooter />
+            </Box>
+        </Box>
+
+        {
+            stream.chatVisible &&
+            <Box style={{ border: '1px solid #dfdfdf70', borderRadius: 7, minWidth: '400px' }}>
+                <ChatContainer />
+            </Box>
         }
-    </>
-}
+    </Box>);
+});

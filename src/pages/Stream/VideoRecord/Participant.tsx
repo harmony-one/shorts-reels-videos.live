@@ -4,10 +4,14 @@ import {
   ParticipantEvent,
   TrackSource,
 } from "@mux/spaces-web";
+import { observer } from "mobx-react-lite";
+import { useStores } from "stores";
 
-export const Participant = ({ participant }) => {
+export const Participant = observer(() => {
+  const { stream } = useStores();
+  
   const mediaEl = useRef(null);
-  const isLocal = participant instanceof LocalParticipant;
+  const isLocal = stream.localParticipant instanceof LocalParticipant;
 
   const attachTrack = useCallback((track) => {
     track.attach(mediaEl.current);
@@ -20,12 +24,10 @@ export const Participant = ({ participant }) => {
   useEffect(() => {
     if (!mediaEl.current) return null;
 
-    const microphoneTrack = participant
-      .getAudioTracks()
+    const microphoneTrack = stream.localParticipant?.getAudioTracks()
       .find((audioTrack) => audioTrack.source === TrackSource.Microphone);
 
-    const cameraTrack = participant
-      .getVideoTracks()
+    const cameraTrack = stream.localParticipant?.getVideoTracks()
       .find((videoTrack) => videoTrack.source === TrackSource.Camera);
 
     if (microphoneTrack) {
@@ -36,14 +38,14 @@ export const Participant = ({ participant }) => {
       attachTrack(cameraTrack);
     }
 
-    participant.on(ParticipantEvent.TrackSubscribed, attachTrack);
-    participant.on(ParticipantEvent.TrackUnsubscribed, detachTrack);
+    stream.localParticipant?.on(ParticipantEvent.TrackSubscribed, attachTrack);
+    stream.localParticipant?.on(ParticipantEvent.TrackUnsubscribed, detachTrack);
 
     return () => {
-      participant.off(ParticipantEvent.TrackSubscribed, attachTrack);
-      participant.off(ParticipantEvent.TrackUnsubscribed, detachTrack);
+      stream.localParticipant?.off(ParticipantEvent.TrackSubscribed, attachTrack);
+      stream.localParticipant?.off(ParticipantEvent.TrackUnsubscribed, detachTrack);
     };
-  }, [participant, attachTrack, detachTrack]);
+  }, [stream.localParticipant, attachTrack, detachTrack]);
 
   // const toggleFullScreen = () => {
   //   var el = mediaEl.current;
@@ -58,17 +60,14 @@ export const Participant = ({ participant }) => {
   //   }
   // };
 
-  return (
-    <div>
-      {/* <h2>{participant.connectionId}</h2> */}
-      <video
-        ref={mediaEl}
-        autoPlay
-        playsInline
-        muted={isLocal}
-        controls
-        style={{ width: "1024px", height: "auto", maxWidth: '100vw' }}
-      />
-    </div>
-  );
-};
+  return (<div style={{ display: 'contents' }}>
+    <video
+      ref={mediaEl}
+      autoPlay
+      playsInline
+      muted={isLocal}
+      controls
+      style={{ height: "100%", background: 'black' }}
+    />
+  </div>);
+});
