@@ -4,12 +4,17 @@ import { useStores } from 'stores';
 import { useNavigate } from 'react-router-dom';
 import { Box } from 'grommet';
 import { Button } from 'components/Button';
+import { StreamRecord } from '../VideoRecord';
 
 export const VideoView = observer(() => {
     const navigate = useNavigate();
-    const { stream } = useStores();
+    const { stream, user } = useStores();
 
-    if (stream?.data?.status === 'active') {
+    if(user.address && stream.isInitilized && stream.data.ownerAddress === user.address) {
+        return <StreamRecord />
+    }
+
+    if (stream?.data?.status !== 'active') {
         return <Box
             justify='center'
             align='center'
@@ -25,9 +30,9 @@ export const VideoView = observer(() => {
         </Box >
     }
 
-    return <Box justify="start">
-        <div dangerouslySetInnerHTML={{
+    return <div style={{ display: 'contents' }}>
+        <div style={{ height: "100%" }} dangerouslySetInnerHTML={{
             __html: `<mux-player stream-type="live" playback-id="${stream.data.playbackId}" metadata-video-title="Placeholder (optional)" metadata-viewer-user-id="Placeholder (optional)" primary-color="#FFFFFF" secondary-color="#000000" autoplay="true"></mux-player>`
         }} />
-    </Box>;
+    </div>;
 })

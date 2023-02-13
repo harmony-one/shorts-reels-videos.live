@@ -1,6 +1,7 @@
 import { action, autorun, computed, makeAutoObservable, observable } from 'mobx';
 import { IStores } from 'stores';
-import { getLiveStream, likeLiveStream } from 'utils';
+import { getLiveStream, likeLiveStream, getLiveStreamToken, startLiveStream } from 'utils';
+import { Space, SpaceEvent, getUserMedia } from "@mux/spaces-web";
 
 export enum FETCH_STATUS {
   INIT = 'INIT',
@@ -12,6 +13,10 @@ export enum FETCH_STATUS {
 
 export class ActiveStream {
   public stores: IStores;
+
+  @observable space: Space;
+  @observable localParticipant;
+  @observable startStreamLoading = false;
 
   @observable fetchStatus = FETCH_STATUS.INIT;
   @observable error = '';
@@ -71,4 +76,56 @@ export class ActiveStream {
     this.fetchStatus = FETCH_STATUS.INIT;
     this.error = '';
   }
+
+  ///////////////////////////
+
+  @action.bound
+  initSpace = async () => {
+    const res = await getLiveStreamToken(this.data.id);
+    this.space = new Space(res.data);
+  }
+
+  @action.bound
+  startStream = async () => {
+    try {
+      this.startStreamLoading = true;
+
+      await this.initSpace();
+
+      this.localParticipant = await this.space.join();
+
+      // Get and publish our local tracks
+      let localTracks = await getUserMedia({
+        audio: true,
+        video: true,
+      });
+
+      await this.localParticipant.publishTracks(localTracks);
+
+      // while (!starting) {
+      try {
+        await startLiveStream(this.data.id);
+        // starting = true;
+      } catch (e) {
+        //sleep(2000); 
+      }
+    } catch (e) { }
+
+    this.startStreamLoading = false;
+  }
+
+  @action.bound
+  stopStream = async () => {
+    // // Set the local participant so it will be rendered
+    await this.space.leave();
+
+    this.localParticipant.unpublishAllTracks({ stop: true });
+
+    this.localParticipant = null;
+
+    // await stopBroadcast({
+    //     spaceId: props.ownerCreds.spaceId,
+    //     broadcastId: props.ownerCreds.broadcastId,
+    // });
+  };
 }

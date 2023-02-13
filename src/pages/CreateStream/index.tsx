@@ -1,3 +1,5 @@
+import { Button } from 'components/Button';
+import { TextInput } from 'grommet';
 import React from 'react';
 import { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -87,7 +89,7 @@ export function CreateStream(props) {
                 <div style={{
                     display: 'flex',
                     flexDirection: 'row',
-                    alignItems: 'flex-start',
+                    alignItems: 'center',
                     justifyContent: 'center',
                     marginBottom: 30
                 }}>
@@ -95,7 +97,7 @@ export function CreateStream(props) {
                         {"https://"}
                     </div>
                     <div>
-                        <input
+                        <TextInput
                             className='small-input'
                             disabled={loading}
                             value={name}
@@ -106,7 +108,7 @@ export function CreateStream(props) {
                         {".1.country/"}
                     </div>
                     <div>
-                        <input
+                        <TextInput
                             className='small-input'
                             disabled={loading}
                             value={aliasName}
@@ -119,24 +121,23 @@ export function CreateStream(props) {
                     stream name:
                 </h3>
 
-                <input
+                <TextInput
                     disabled={loading}
                     value={title}
                     onChange={event => {
                         setTitle(event.target.value);
                     }}
                 >
-                </input>
+                </TextInput>
             </div>
 
-            <div
+            <Button
                 onClick={() => create()}
-                className="App-button"
                 style={{ marginTop: 50 }}
             >
                 <RecIcon style={{ marginRight: 10, display: loading ? 'none' : 'block' }} />
                 {!loading ? "Go Live" : '...'}
-            </div>
+            </Button>
         </div>
     );
 }
