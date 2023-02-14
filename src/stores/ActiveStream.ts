@@ -21,8 +21,6 @@ export class ActiveStream {
   @observable fetchStatus = FETCH_STATUS.INIT;
   @observable error = '';
 
-  @observable chatVisible = true;
-
   @observable data;
 
   constructor(stores) {
@@ -63,11 +61,6 @@ export class ActiveStream {
       await likeLiveStream(this.data?.id, this.stores.user.address);
       await this.loadStream(this.data.id);
     }
-  }
-
-  @action.bound
-  toggleChatVisible = () => {
-    this.chatVisible = !this.chatVisible;
   }
 
   @action.bound
