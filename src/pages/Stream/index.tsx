@@ -9,19 +9,23 @@ import { StreamFooter } from "./Footer";
 import { useMediaQuery } from 'react-responsive'
 
 export const Stream = observer(() => {
-    const { stream, user } = useStores();
+    const { stream, user, chat } = useStores();
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1024px)' })
 
     const { id } = useParams();
 
     useEffect(() => {
-        stream.chatVisible = !isTabletOrMobile;
+        chat.chatVisible = !isTabletOrMobile;
     }, [isTabletOrMobile]);
 
     useEffect(() => {
         stream.loadStream(id);
+        chat.connectChat();
 
-        return () => stream.clean();
+        return () => {
+            stream.clean();
+            chat.disconnectChat();
+        }
     }, [id])
 
     if (!stream.isInitilized || !user.isInitilized) {
@@ -31,19 +35,16 @@ export const Stream = observer(() => {
     if (isTabletOrMobile) {
         return (<Box direction="column" fill={true} gap="medium" margin={{ top: 'small' }}>
             {
-                !stream.chatVisible && <VideoView />
+                chat.chatVisible ?
+                    <Box style={{ border: '1px solid #dfdfdf70', borderRadius: 7 }} fill={true}>
+                        <ChatContainer />
+                    </Box> :
+                    <VideoView />
             }
 
             <Box style={{ borderTop: '1px solid white', minHeight: '70px' }}>
                 <StreamFooter />
             </Box>
-
-            {
-                stream.chatVisible &&
-                <Box style={{ border: '1px solid #dfdfdf70', borderRadius: 7 }} fill={true}>
-                    <ChatContainer />
-                </Box>
-            }
         </Box>);
     }
 
@@ -59,7 +60,7 @@ export const Stream = observer(() => {
         </Box>
 
         {
-            stream.chatVisible &&
+            chat.chatVisible &&
             <Box style={{ border: '1px solid #dfdfdf70', borderRadius: 7, minWidth: '400px' }}>
                 <ChatContainer />
             </Box>

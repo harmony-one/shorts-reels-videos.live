@@ -11,7 +11,7 @@ import { useMediaQuery } from "react-responsive";
 // import { AiFillHeart } from '@react-icons/all-files/ai/AiFillHeart';
 
 export const StreamFooter = observer((props: BoxProps) => {
-    const { stream } = useStores();
+    const { stream, chat } = useStores();
     const isSmallMobile = useMediaQuery({ query: '(max-width: 500px)' })
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1024px)' })
 
@@ -63,7 +63,7 @@ export const StreamFooter = observer((props: BoxProps) => {
                 <BiDonateHeart color="#38b3ff" size="24px" />
             </div>
 
-            <div onClick={() => stream.toggleChatVisible()} style={{ cursor: 'pointer' }}>
+            <div onClick={() => chat.toggleChatVisible()} style={{ cursor: 'pointer' }}>
                 <BiChat color="#38b3ff" size="24px" />
             </div>
         </Box>

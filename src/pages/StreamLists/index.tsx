@@ -21,7 +21,15 @@ export const StreamList = () => {
     }, []);
 
     return (
-        <Box align="center" justify="center" pad={{ top: 'large' }} overflow="scroll">
+        <Box
+            align="center"
+            justify="center"
+            pad={{ top: 'large' }}
+            style={{
+                overflowX: 'hidden',
+                overflowY: 'scroll'
+            }}
+        >
             <h2>
                 Live Streams:
             </h2>

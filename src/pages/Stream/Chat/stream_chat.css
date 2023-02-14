@@ -7,6 +7,12 @@
     font-size: 1em !important;
 }
 
+@media (max-width: 500px) {
+    .stream_chat_custom {
+        padding: 0;
+    }
+}
+
 /* .str-chat__list  {
     background: #282c34;         
 } */
@@ -70,7 +76,7 @@ mux-player {
     padding: 0;
 }
 
-.str-chat__message-inner >.str-chat__message-simple__actions {
+.str-chat__message-inner>.str-chat__message-simple__actions {
     display: none;
 }
 

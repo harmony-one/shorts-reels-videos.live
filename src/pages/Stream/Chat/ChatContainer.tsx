@@ -1,10 +1,8 @@
-import React, { useEffect, useState } from 'react';
-import { StreamChat } from 'stream-chat';
+import React from 'react';
 import {
     Chat,
     Channel,
     ChannelHeader,
-    ChannelList,
     MessageList,
     MessageInput,
     Thread,
@@ -12,61 +10,18 @@ import {
 } from 'stream-chat-react';
 import '@stream-io/stream-chat-css/dist/css/index.css';
 import './stream_chat.css';
+import { useStores } from 'stores';
+import { observer } from 'mobx-react-lite';
 
-const filters = {
-    type: 'livestream',
-    id: '1'
-};
+export const ChatContainer = observer(() => {
+    const { chat } = useStores();
 
-const options = { state: true, presence: false, limit: 10 };
-const sort = { last_message_at: -1 };
-
-export const ChatContainer = () => {
-    const [client, setClient] = useState(null);
-    const [channel, setChannel] = useState(null);
-
-    useEffect(() => {
-        const newClient = new StreamChat('uqxm3pdrrhju');
-
-        const handleConnectionChange = ({ online = false }) => {
-            if (!online) return console.log('connection lost');
-            setClient(newClient);
-        };
-
-        const existingChannel = newClient.getChannelById('livestream', '2', {});
-        setChannel(existingChannel);
-
-        newClient.on('connection.changed', handleConnectionChange);
-
-        // newClient.connectUser(
-        //     {
-        //         id: 'dave-matthews',
-        //         name: 'Dave Matthews',
-        //     },
-        //     'your_user_token',
-        // );
-
-        newClient.connectUser(
-            {
-                id: 'john',
-                name: 'John Doe',
-                image: 'https://getstream.io/random_svg/?name=John',
-            },
-            newClient.devToken('john'),
-        );
-
-        return () => {
-            newClient.off('connection.changed', handleConnectionChange);
-            newClient.disconnectUser().then(() => console.log('connection closed'));
-        };
-    }, []);
-
-    if (!client) return null;
+    if (!chat.client) return null;
 
     return (
-        <Chat client={client} theme='stream_chat_custom'>
+        <Chat client={chat.client} theme="stream_chat_custom">
             {/* <ChannelList filters={filters} sort={sort} options={options} /> */}
-            <Channel channel={channel}>
+            <Channel channel={chat.channel}>
                 <Window>
                     <ChannelHeader />
                     <MessageList
@@ -80,4 +35,4 @@ export const ChatContainer = () => {
             </Channel>
         </Chat>
     );
-};
+});

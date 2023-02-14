@@ -1,6 +1,6 @@
-import React, { useCallback, useEffect, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deleteLiveStream, getLiveStreams } from 'utils';
+import { deleteLiveStream } from 'utils';
 
 import { MdDeleteForever } from '@react-icons/all-files/md/MdDeleteForever';
 import { Box } from 'grommet';
@@ -66,7 +66,7 @@ export const StreamPreview = ({ stream, onRemove }) => {
 
             <Box
                 onClick={() => removeStream(stream.id)}
-                margin={{ left: '20px ' }}
+                margin={{ left: '20px', right: '10px' }}
                 style={{ cursor: 'pointer' }}
             >
                 {
