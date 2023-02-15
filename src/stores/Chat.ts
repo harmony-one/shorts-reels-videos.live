@@ -1,6 +1,17 @@
-import { action, computed, makeAutoObservable, makeObservable, observable } from 'mobx';
+import { action, autorun, makeAutoObservable, makeObservable, observable } from 'mobx';
 import { StreamChat } from 'stream-chat';
 import { IStores } from 'stores';
+import { joinChat } from 'utils';
+
+interface IConnectParams {
+    apiKey: string;
+    user: {
+        token: string;
+        name: string;
+        id: string;
+    };
+    channelId: string;
+}
 
 export class Chat {
     public stores: IStores;
@@ -14,6 +25,25 @@ export class Chat {
         this.stores = stores;
 
         makeAutoObservable(this);
+
+        autorun(() => {
+            if (
+                this.stores.user.address &&
+                this.stores.stream.data?.id &&
+                this.stores.user.chatApiKey &&
+                !this.client
+            ) {
+                this.connectChat({
+                    apiKey: this.stores.user.chatApiKey,
+                    user: {
+                        name: this.stores.user.address,
+                        id: this.stores.user.address,
+                        token: this.stores.user.chatUserToken,
+                    },
+                    channelId: this.stores.stream.data.id
+                })
+            }
+        });
     }
 
     @action.bound
@@ -22,15 +52,17 @@ export class Chat {
     }
 
     @action.bound
-    connectChat = () => {
-        const newClient = new StreamChat('uqxm3pdrrhju');
+    connectChat = async (params: IConnectParams) => {
+        console.log('connectChat');
+
+        const newClient = new StreamChat(params.apiKey);
 
         const handleConnectionChange = ({ online = false }) => {
             if (!online) return console.log('connection lost');
             this.client = newClient;
         };
 
-        this.channel = newClient.getChannelById('livestream', '2', {});
+        this.channel = newClient.getChannelById('livestream', params.channelId, {});
 
         newClient.on('connection.changed', handleConnectionChange);
 
@@ -44,21 +76,31 @@ export class Chat {
 
         newClient.connectUser(
             {
-                id: 'john',
-                name: 'John Doe',
-                image: 'https://getstream.io/random_svg/?name=John',
+                id: params.user.id,
+                name: params.user.name,
+                // image: `https://getstream.io/random_svg/?name=`,
             },
-            newClient.devToken('john'),
+            params.user.token
+            // newClient.devToken('john'),
         );
+
+        await joinChat(params.channelId, params.user.id);
     };
 
     @action.bound
     disconnectChat = () => {
-        if (this.client) {
-            this.client.off('connection.changed', () => {
-                this.client = null
+        console.log('disconnectChat');
+        const disconnectedClinet = this.client;
+
+        this.client = null;
+
+        if (disconnectedClinet) {
+            disconnectedClinet.off('connection.changed', () => {
+                // this.client = null
             });
-            this.client.disconnectUser().then(() => console.log('connection closed'));
+            disconnectedClinet.disconnectUser().then(() => {
+                console.log('connection closed');
+            });
         }
     }
 }

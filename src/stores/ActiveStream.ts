@@ -48,6 +48,8 @@ export class ActiveStream {
       this.data = res.data;
 
       this.fetchStatus = FETCH_STATUS.SUCCESS;
+
+      return res.data;
     } catch (e) {
       this.error = e?.message;
 

@@ -38,6 +38,12 @@ mux-player {
 
 .str-chat__avatar-fallback {
     background: url("./one.svg") no-repeat center;
+    /* display: none; */
+    color: #00000000;
+}
+
+li > .str-chat__avatar {
+    display: none;
 }
 
 .str-chat__message-simple-timestamp {
@@ -53,7 +59,7 @@ mux-player {
 }
 
 .str-chat__input-flat {
-    padding: 0;
+    padding: 0px 0px 0px 4px;
 }
 
 .str-chat__header-hamburger {
@@ -82,4 +88,85 @@ mux-player {
 
 .str-chat__list .str-chat__reverse-infinite-scroll {
     padding: 20px 0px;
+}
+
+.str-chat__avatar--circle {
+    order: 1 !important;
+    margin: 0px 0px 0px 8px;
+    display: none;
+}
+
+.str-chat__li--single .str-chat__message-text-inner {
+    border: 0;
+    border-radius: 0;
+    display: contents;
+}
+
+.str-chat__message-simple-name {
+    position: absolute;
+    left: -4px;
+    top: -19px;
+    display: block;
+    font-size: 14px;
+    width: 76px;
+    overflow: hidden;
+    font-family: monospace;
+    font-weight: bold;
+    padding: 2px 7px;
+    background: #0049af;
+    color: white;
+    border-radius: 5px;
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    text-align: center;
+}
+
+.str-chat__message--me::before {
+    display: block;
+    content: 'you';
+    position: absolute;
+    display: block;
+    font-size: 14px;
+    width: 76px;
+    overflow: hidden;
+    font-family: monospace;
+    font-weight: bold;
+    padding: 2px 7px;
+    background: rgb(56, 179, 255);
+    color: white;
+    border-radius: 5px;
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    left: 6px;
+    top: 9px;
+    text-align: center;
+}
+
+.str-chat__message-simple-name:after {
+    position: absolute;
+    content: ":";
+    display: block;
+    width: auto;
+    height: auto;
+}
+
+.str-chat__message-text {
+    top: 5px;
+    left: 84px;
+    max-width: 250px;
+}
+
+/* .str-chat__message-simple-name {
+    display: none;
+} */
+
+.str-chat__message-simple-name {
+
+}
+
+
+.str-chat__header-livestream-left--title {
+    max-width: 205px;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

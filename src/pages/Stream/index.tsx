@@ -20,13 +20,12 @@ export const Stream = observer(() => {
 
     useEffect(() => {
         stream.loadStream(id);
-        chat.connectChat();
 
         return () => {
-            stream.clean();
             chat.disconnectChat();
+            stream.clean();
         }
-    }, [id])
+    }, [id, user.address])
 
     if (!stream.isInitilized || !user.isInitilized) {
         return null;
