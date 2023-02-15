@@ -3,6 +3,7 @@ import detectEthereumProvider from '@metamask/detect-provider';
 import Web3 from 'web3';
 import { getChainConfig } from './helpers';
 import { IStores } from 'stores';
+import { createChatUser, getChatKeys } from 'utils';
 
 const defaults = {};
 
@@ -20,6 +21,9 @@ export class UserStoreMetamask {
   @observable public address: string = '';
 
   @observable metamaskChainId = 0;
+
+  @observable chatApiKey = '';
+  @observable chatUserToken = '';
 
   constructor(stores) {
     this.stores = stores;
@@ -43,6 +47,18 @@ export class UserStoreMetamask {
         // this.signIn();
       }
     });
+  }
+
+  @action.bound
+  getStreamChatKeys = async () => {
+    let res = await getChatKeys(this.address);
+
+    if(typeof res.data.userToken !== 'string') {
+      res = await createChatUser(this.address);
+    }
+
+    this.chatApiKey = res.data.apiKey;
+    this.chatUserToken = res.data.userToken;
   }
 
   @computed public get isNetworkActual() {
@@ -71,6 +87,8 @@ export class UserStoreMetamask {
       this.signOut();
     } else {
       this.address = accounts[0];
+
+      this.getStreamChatKeys();
 
       try {
         this.updateBalance();

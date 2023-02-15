@@ -34,3 +34,15 @@ export const startLiveStream = async (id) => {
 export const likeLiveStream = async (id, address) => {
     return axios.post(`${backendUrl}/streams/${id}/like?address=${address}`);
 };
+
+export const getChatKeys = async (address) => {
+    return axios.get(`${backendUrl}/streams/chat/keys?address=${address}`);
+};
+
+export const createChatUser = async (address) => {
+    return axios.post(`${backendUrl}/streams/chat/create-user?address=${address}`);
+};
+
+export const joinChat = async (id, address) => {
+    return axios.post(`${backendUrl}/streams/${id}/join-chat?address=${address}`);
+};
