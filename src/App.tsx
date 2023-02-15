@@ -7,6 +7,7 @@ import { Header } from './Header';
 import { CreateStream } from './pages/CreateStream';
 import { Box } from 'grommet';
 import { BodyContainer } from 'components/BodyContainer';
+import { ActionModals } from 'components/ActionModals';
 
 function App() {
   return (
@@ -24,8 +25,8 @@ function App() {
           <Route path="/streams/:id" element={<Stream />} />
         </Routes>
       </BodyContainer>
+      <ActionModals />
     </Box>
-
   );
 }
 
