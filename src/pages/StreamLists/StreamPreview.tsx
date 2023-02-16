@@ -55,7 +55,7 @@ export const StreamPreview = ({ stream, onRemove }) => {
                 </div>
 
                 <Button
-                    onClick={() => true && navigate(`/streams/${stream.id}`)}
+                    onClick={() => true && navigate(`/${stream.id}`)}
                     style={{
                         opacity: true ? 1 : 0.3,
                     }}
