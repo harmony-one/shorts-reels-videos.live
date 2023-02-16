@@ -10,7 +10,7 @@ export type ActionModalBody = (data: {
 export interface ActionModalOptions {
     width?: string;
     position?: 'flex-start' | 'center';
-    title: string;
+    title?: string;
     onApply: (data?: any) => Promise<any>;
     onClose?: (data?: any) => any;
     applyText: string;

@@ -10,6 +10,8 @@ const ModalOverlay = styled.div<IWrapProps>`
   position: fixed;
   width: 100%;
   height: 100%;
+  max-width: 100%;
+  max-height: 100%;
   left: 0;
   top: 0;
   background-color: rgba(0, 0, 0, 0.6);
@@ -44,6 +46,7 @@ const ModalWrap = styled.div`
 
 const Modal = styled.div`
   position: relative;
+  max-width: 100%;
   z-index: 4;
   background-color: #fff;
   box-sizing: border-box;

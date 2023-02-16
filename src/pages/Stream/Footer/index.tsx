@@ -8,10 +8,11 @@ import { useStores } from "stores";
 import { Button } from "components/Button";
 import { FaStop } from '@react-icons/all-files/fa/FaStop';
 import { useMediaQuery } from "react-responsive";
+import { openDonationModal } from "components/DonationModal";
 // import { AiFillHeart } from '@react-icons/all-files/ai/AiFillHeart';
 
 export const StreamFooter = observer((props: BoxProps) => {
-    const { stream, chat } = useStores();
+    const { stream, chat, modals } = useStores();
     const isSmallMobile = useMediaQuery({ query: '(max-width: 500px)' })
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1024px)' })
 
@@ -59,7 +60,7 @@ export const StreamFooter = observer((props: BoxProps) => {
                 </span>
             </Box>
 
-            <div onClick={() => { }} style={{ cursor: 'pointer' }}>
+            <div onClick={() => openDonationModal(modals)} style={{ cursor: 'pointer' }}>
                 <BiDonateHeart color="#38b3ff" size="24px" />
             </div>
 
