@@ -22,7 +22,7 @@ function App() {
         <Routes>
           <Route path="/" element={<StreamList />} />
           <Route path="/go-live" element={<CreateStream />} />
-          <Route path="/streams/:id" element={<Stream />} />
+          <Route path="/:id" element={<Stream />} />
         </Routes>
       </BodyContainer>
       <ActionModals />

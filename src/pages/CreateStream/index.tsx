@@ -39,7 +39,7 @@ export function CreateStream(props) {
                 ownerAddress: accounts[0]
             });
 
-            navigator(`/streams/${res.data.id}`);
+            navigator(`/${res.data.id}`);
         } catch (err) {
             setError(err?.message);
         }
