@@ -1,13 +1,18 @@
 import React, { useState } from "react";
-import { Box, Text, TextInput } from "grommet";
+import { Box, Text } from "grommet";
 import { observer } from "mobx-react-lite";
 import { ActionModalsStore } from "stores/ActionModals";
 import { useStores } from "stores";
 import { MetamaskButton } from "./MetamaskButton";
+import { NumberInput } from "./Inputs";
+import { Button } from "./Button";
+import { formatWithSixDecimals } from "./Inputs/helpers";
 
 const DonationModalBody = observer(() => {
-    const [value, setValue] = useState('');
+    const [value, setValue] = useState('0');
     const { user } = useStores();
+
+    const maxAvailable = String(Math.max(Number(user.balance) / 1e18 - 0.1, 0));
 
     if (!user.address) {
         return <Box
@@ -34,14 +39,33 @@ const DonationModalBody = observer(() => {
         </Text>
 
         <Box
+            fill={true}
             direction="column"
-            gap="10px"
+            gap="5px"
         >
             <Text>Amount (ONE)</Text>
-            <TextInput 
-                value={value}
-                onChange={event => setValue(event.target.value)}
-            />
+
+            <Box width="300px">
+                <NumberInput
+                    size="auto"
+                    type="decimal"
+                    min={0}
+                    precision={18}
+                    delimiter="."
+                    placeholder="0"
+                    style={{ width: '100%', textAlign: 'center' }}
+                    value={value}
+                    onChange={value => setValue(value)}
+                />
+            </Box>
+
+            <Box onClick={() => setValue(maxAvailable)}>
+                <Text size="xxsmall" color="NBlue">
+                    {formatWithSixDecimals(maxAvailable)} Max Available
+                </Text>
+            </Box>
+
+
         </Box>
     </Box>
 })
