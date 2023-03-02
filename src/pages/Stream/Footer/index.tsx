@@ -18,6 +18,10 @@ export const StreamFooter = observer((props: BoxProps) => {
 
     const streamStarted = !!stream.localParticipant && !stream.startStreamLoading;
 
+    if(!stream.data) {
+        return null;
+    }
+
     return <Box
         direction="row"
         gap="30px"

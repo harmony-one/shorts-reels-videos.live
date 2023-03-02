@@ -115,7 +115,7 @@ export const ActionModal = observer<{
             margin="0 0 0 24px"
             size="auto"
             onClick={() => {
-              if (bodyRef && bodyRef.current && onValidate.callback) {
+              if (bodyRef && onValidate.callback) {
                 onValidate
                   .callback()
                   .then(onApply)

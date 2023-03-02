@@ -50,6 +50,7 @@
     "mobx": "^6.8.0",
     "mobx-react": "^7.6.0",
     "mobx-react-lite": "^3.4.0",
+    "one-country-sdk": "^3.1.4",
     "postcss": "^8.4.4",
     "postcss-flexbugs-fixes": "^5.0.2",
     "postcss-loader": "^6.2.1",

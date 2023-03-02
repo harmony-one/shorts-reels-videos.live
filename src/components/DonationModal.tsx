@@ -7,6 +7,8 @@ import { MetamaskButton } from "./MetamaskButton";
 import { NumberInput } from "./Inputs";
 import { Button } from "./Button";
 import { formatWithSixDecimals } from "./Inputs/helpers";
+// import Web3 from 'web3'
+// import { OneCountry } from 'one-country-sdk'
 
 const DonationModalBody = observer(() => {
     const [value, setValue] = useState('0');

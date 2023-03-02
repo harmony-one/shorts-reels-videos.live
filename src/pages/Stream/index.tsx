@@ -7,25 +7,26 @@ import { Box } from "grommet";
 import { VideoView } from "./VideoView";
 import { StreamFooter } from "./Footer";
 import { useMediaQuery } from 'react-responsive'
+import { getDomainName } from 'utils';
 
 export const Stream = observer(() => {
     const { stream, user, chat } = useStores();
     const isTabletOrMobile = useMediaQuery({ query: '(max-width: 1024px)' })
-
-    const { id } = useParams();
 
     useEffect(() => {
         chat.chatVisible = !isTabletOrMobile;
     }, [isTabletOrMobile]);
 
     useEffect(() => {
-        stream.loadStream(id);
+        const name = getDomainName();
+
+        stream.loadStream(name);
 
         return () => {
             chat.disconnectChat();
             stream.clean();
         }
-    }, [id, user.address])
+    }, [user.address])
 
     if (!stream.isInitilized || !user.isInitilized) {
         return null;

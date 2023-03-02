@@ -40,7 +40,7 @@ export class Chat {
                         id: this.stores.user.address,
                         token: this.stores.user.chatUserToken,
                     },
-                    channelId: this.stores.stream.data.id
+                    channelId: this.stores.stream.data.name
                 })
             }
         });

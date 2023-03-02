@@ -28,22 +28,23 @@ export class ActiveStream {
 
     makeAutoObservable(this);
 
-    setInterval(() => this.data && this.loadStream(this.data.id), 3000)
+    setInterval(() => this.data && this.loadStream(this.data.name), 3000)
   }
 
   @computed
   get isInitilized() {
     return this.fetchStatus === FETCH_STATUS.SUCCESS
+      || this.fetchStatus === FETCH_STATUS.ERROR
       || this.fetchStatus === FETCH_STATUS.LOADING;
   }
 
   @action.bound
-  loadStream = async (id) => {
+  loadStream = async (name) => {
     this.fetchStatus = this.fetchStatus === FETCH_STATUS.INIT ?
       FETCH_STATUS.FIRST_LOADING : FETCH_STATUS.LOADING;
 
     try {
-      const res = await getLiveStream(id, this.stores.user.address);
+      const res = await getLiveStream(name, this.stores.user.address);
 
       this.data = res.data;
 
@@ -60,8 +61,8 @@ export class ActiveStream {
   @action.bound
   likeLiveStream = async () => {
     if (this.stores.user.address) {
-      await likeLiveStream(this.data?.id, this.stores.user.address);
-      await this.loadStream(this.data.id);
+      await likeLiveStream(this.data?.name, this.stores.user.address);
+      await this.loadStream(this.data.name);
     }
   }
 
@@ -76,7 +77,7 @@ export class ActiveStream {
 
   @action.bound
   initSpace = async () => {
-    const res = await getLiveStreamToken(this.data.id);
+    const res = await getLiveStreamToken(this.data.name);
     this.space = new Space(res.data);
   }
 
@@ -99,7 +100,7 @@ export class ActiveStream {
 
       // while (!starting) {
       try {
-        await startLiveStream(this.data.id);
+        await startLiveStream(this.data.name);
         // starting = true;
       } catch (e) {
         //sleep(2000); 
