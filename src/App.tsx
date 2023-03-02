@@ -1,12 +1,13 @@
 import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 // import './App.css';
-import { StreamList } from './pages/StreamLists';
+// import { StreamList } from './pages/StreamLists';
 import { Stream } from './pages/Stream';
 import { Header } from './Header';
-import { CreateStream } from './pages/CreateStream';
+// import { CreateStream } from './pages/CreateStream';
 import { Box } from 'grommet';
 import { BodyContainer } from 'components/BodyContainer';
+import { ActionModals } from 'components/ActionModals';
 
 function App() {
   return (
@@ -19,13 +20,13 @@ function App() {
       <Header />
       <BodyContainer>
         <Routes>
-          <Route path="/" element={<StreamList />} />
-          <Route path="/go-live" element={<CreateStream />} />
-          <Route path="/:id" element={<Stream />} />
+          <Route path="/live" element={<Stream />} />
+          {/* <Route path="/live" element={<CreateStream />} />
+          <Route path="/:name" element={<Stream />} /> */}
         </Routes>
       </BodyContainer>
+      <ActionModals />
     </Box>
-
   );
 }
 

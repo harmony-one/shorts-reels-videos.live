@@ -7,10 +7,11 @@ import { useStores } from 'stores';
 import { Button } from 'components/Button';
 import { MetamaskButton } from 'components/MetamaskButton';
 import { useMediaQuery } from 'react-responsive';
+import { openGoLiveModal } from './components/GoLiveModal';
 
 export const Header = observer(() => {
     const navigator = useNavigate();
-    const { user } = useStores();
+    const { user, modals } = useStores();
     const isSmallMobile = useMediaQuery({ query: '(max-width: 500px)' })
 
     return (
@@ -39,8 +40,13 @@ export const Header = observer(() => {
             </Box>
 
             <Box direction="row" margin={{ top: 'medium' }} gap="30px">
-                {window.location.pathname === '/' &&
-                    <Button onClick={() => navigator('/go-live')}>
+                {/* {window.location.pathname === '/' && user.address &&
+                    <Button onClick={() => openGoLiveModal(
+                        modals,
+                        async ({ value }) => {
+                            navigator(`/${value}`)
+                        })
+                    }>
                         <RecIcon style={{ marginRight: 10 }} />
                         Go Live
                     </Button>
@@ -48,7 +54,7 @@ export const Header = observer(() => {
 
                 <Button onClick={() => navigator('/')} >
                     {"All Streams"}
-                </Button>
+                </Button> */}
             </Box>
         </Box>
     );

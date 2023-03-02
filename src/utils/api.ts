@@ -43,6 +43,6 @@ export const createChatUser = async (address) => {
     return axios.post(`${backendUrl}/streams/chat/create-user?address=${address}`);
 };
 
-export const joinChat = async (id, address) => {
-    return axios.post(`${backendUrl}/streams/${id}/join-chat?address=${address}`);
+export const joinChat = async (name, address) => {
+    return axios.post(`${backendUrl}/streams/${name}/join-chat?address=${address}`);
 };
